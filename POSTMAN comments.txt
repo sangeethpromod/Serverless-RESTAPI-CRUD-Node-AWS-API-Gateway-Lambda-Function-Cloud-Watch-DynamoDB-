@@ -1,0 +1,24 @@
+
+POST
+{
+      "name": "leonardo",
+      "username": "leo",
+      "email": "leo@gmail.com",
+      "phone": 8976543219,
+      "id": 1
+}
+
+
+PUT
+{
+    "id": 1,
+    "updateKey": "email",
+    "updateValue": "dell@gmail.com"
+
+}
+
+
+DELETE
+{
+    "id": 2
+}

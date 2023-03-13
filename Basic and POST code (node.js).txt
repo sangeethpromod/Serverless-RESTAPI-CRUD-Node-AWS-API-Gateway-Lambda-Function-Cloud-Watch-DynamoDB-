@@ -1,0 +1,63 @@
+const AWS = require('aws-sdk');
+
+AWS.config.update({
+    region: 'us-east-1'
+});
+
+const dynamoDBTableName = 'users';
+const dynamodb = new AWS.DynamoDB.DocumentClient();
+const userPath = '/users';
+
+exports.handler = async (event) => {
+    let response;
+    console.log(event);
+    
+    switch(event.httpMethod) {
+        case 'POST':
+            response = await saveUser(JSON.parse(event.body));
+            break;
+        default:
+            response = buildResponse(404, '404 Not Found');
+    }
+    return response;
+};
+
+async function saveUser(requestBody) {
+    const Params = {
+        TableName: dynamoDBTableName,
+        Item: requestBody
+    }
+    
+    return await dynamodb.put(Params).promise().then(() => {
+        const body = {
+            Operation: 'SAVE',
+            Message: 'SUCCESS',
+            Item: requestBody
+        }
+        return buildResponse(200, body)
+    }, (error) => {
+        console.log(error);
+    })
+}
+
+function buildResponse(statusCode, body) {
+    return {
+        statusCode: statusCode,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    }
+}
+
+
+
+POSTMAN POST 
+{
+      "name":"rest",
+      "username": "api",
+      "email": "rest@gmail.com",
+      "phone": 912345678,
+      "id": 6
+
+}
